@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Bootstrap CSS CDN -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- 필수적인 Bootstrap의 JavaScript와, Popper.js (툴팁과 팝오버에 필요함) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>유사 앱테크 추천</title>
+<style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #f3f3f3;
+    }
+    #imageContainer {
+      position: relative;
+      overflow-y: scroll;
+      width: 100vw;
+      height: 100vh;
+      white-space: nowrap;
+      background-color: #fff; /* 배경색을 흰색으로 변경 */
+    }
+    .image-slide {
+      display: inline-block;
+      width: 100vw;
+      height: 100vh;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      vertical-align: top;
+      /* 새로운 전환 효과 스타일 */
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    .btn-back {
+      position: fixed; /* 버튼을 고정 위치에 둡니다 */
+      top: 0px; /* 상단에서의 위치 */
+      left: 0px; /* 좌측에서의 위치 */
+      z-index: 1000; /* 다른 요소들 위에 버튼이 오도록 z-index 값을 높여줍니다 */
+      background-color: transparent; /* 배경색을 투명하게 설정 */
+      border: none; /* 테두리를 제거 */
+      color: rgba(0, 0, 0, 0.091); /* 글자색 (원하는 색상 코드로 변경 가능) */
+      font-size: 20px; /* 글자 크기 (원하는 크기로 조정 가능) */
+    }
+    .container-fluid, .row, .col-12 {
+    padding-left: 0 !important; /* !important를 사용하여 기존의 스타일을 무시하고 왼쪽 패딩 제거 */
+    padding-right: 0 !important; /* 오른쪽 패딩도 제거하여 양쪽 여백이 일관되게 보이도록 조정 */
+}
+  </style>
+  
+  
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <!-- 'btn-back' 클래스를 버튼에 적용 -->
+            <button onclick="history.back()" class="btn btn-back"><</button>
+          </div>
+        </div>
+    <div id="imageContainer"></div>
+
+    <script>
+      // 사용할 이미지 URL 목록
+      const images = ['앱테크1.png', '앱테크2.png', '앱테크3.png', '앱테크4.png', '앱테크5.png']; // 이미지 URL을 여기에 넣으세요.
+    
+      const imageContainer = document.getElementById('imageContainer');
+    
+      // 이미지 슬라이드를 생성하고 컨테이너에 추가합니다.
+      images.forEach(src => {
+        const imgSlide = document.createElement('div');
+        imgSlide.style.backgroundImage = 'url(' + src + ')';
+        imgSlide.className = 'image-slide';
+        imageContainer.appendChild(imgSlide);
+      });
+    
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+    
+      imageContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - imageContainer.offsetLeft;
+        scrollLeft = imageContainer.scrollLeft;
+      });
+    
+      imageContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+      });
+    
+      imageContainer.addEventListener('mouseup', () => {
+        isDown = false;
+      });
+    
+      imageContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - imageContainer.offsetLeft;
+        const walk = (x - startX);
+        imageContainer.scrollLeft = scrollLeft - walk;
+      });
+
+            // 새로운 함수: 사용자가 이미지를 스와이프할 때 "책장 넘기기" 효과 적용
+    function applyFlipEffect() {
+        const slides = document.querySelectorAll('.image-slide');
+        slides.forEach((slide, index) => {
+        // 현재 슬라이드가 보이는 위치에 따라 3D 회전 효과 적용
+        const rotation = (imageContainer.scrollLeft / imageContainer.clientWidth - index) * 30; // 30도 회전
+        slide.style.transform = `rotateY(${rotation}deg)`;
+        });
+    }
+
+    // 이미지 컨테이너에 스크롤 이벤트 리스너 추가
+    imageContainer.addEventListener('scroll', applyFlipEffect);
+    
+    // 기존의 마우스 이벤트 핸들러 코드 유지
+    </script>
+    </body>
+    </html>
